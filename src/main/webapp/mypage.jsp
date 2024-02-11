@@ -5,7 +5,12 @@
     <title>FileManager</title>
 </head>
 <body>
-<h1>Hello ${name}</h1>
+<p>${currentDateTime}</p>
+<h2>${pathNow}</h2>
+<hr>
+<c:if test="${upPath != null}">
+    <a href="/files?path=${upPath}">Вверх</a>
+</c:if>
 <table>
     <tr>
         <th>Файл</th>
@@ -14,7 +19,9 @@
     </tr>
     <c:forEach items="${filesList}" var="file">
         <tr>
-            <td>${file}</td>
+            <td>
+                <a href="/files?path=${file.getAbsolutePath()}">${file.getAbsolutePath()}</a>
+            </td>
             <td>10mb</td>
             <td>21</td>
         </tr>
