@@ -66,7 +66,7 @@ public class FileManagerServlet extends HttpServlet {
         req.setAttribute("currentTime", getCurrentTime.get(DATE_PATTERN));
         req.setAttribute("currentPath", currAbsolutePath);
 
-        req.getRequestDispatcher("main.jsp").forward(req, resp);
+        req.getRequestDispatcher("fileManager.jsp").forward(req, resp);
     }
 
     @Override
