@@ -66,11 +66,11 @@ public class FileManagerServlet extends HttpServlet {
         req.setAttribute("currentTime", getCurrentTime.get(DATE_PATTERN));
         req.setAttribute("currentPath", currAbsolutePath);
 
-        req.getRequestDispatcher("mypage.jsp").forward(req, resp);
+        req.getRequestDispatcher("main.jsp").forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Path currRelativePath = Objects.isNull(req.getParameter(REQUEST_PARAMETER))
                 ? Paths.get("/")
                 : Paths.get(req.getParameter(REQUEST_PARAMETER));
