@@ -1,0 +1,13 @@
+.file-path {
+    all: unset;
+}
+
+.file-path:hover {
+    color: #CE242B; /* Цвет ссылки при наведении */
+    text-decoration: underline; /* Добавляем подчёркивание */
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+}
