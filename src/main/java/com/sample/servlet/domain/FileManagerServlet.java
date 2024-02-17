@@ -19,9 +19,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-//@TODO
-// добавить что-нибудь в "/"
-// + отрефакторить
 @WebServlet("/files")
 public class FileManagerServlet extends HttpServlet {
     final String REQUEST_PARAMETER = "path";
