@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <style>
     <%@include file="css/main.css"%>
 </style>
@@ -8,12 +8,12 @@
     <title>FileManager</title>
 </head>
 <body>
-<p>${currentDateTime}</p>
-<h2>${pathNow}</h2>
+<p>${currentTime}</p>
+<h2>${currentPath}</h2>
 <hr>
-<c:if test="${upPath != null}">
-    <img class="icon" src="/img/up.png" alt="">
-    <a href="/files?path=${upPath}">Вверх</a>
+<c:if test="${pathToUp != null}">
+    <img class="icon" src="${pageContext.request.contextPath}/img/up.png" alt="">
+    <a href="/files?path=${pathToUp}">Вверх</a>
 </c:if>
 <table>
     <tr>
@@ -21,7 +21,7 @@
         <th>Размер</th>
         <th>Дата</th>
     </tr>
-    <c:forEach items="${filesList}" var="file">
+    <c:forEach items="${listOfFiles}" var="file">
         <tr>
             <td>
                 <c:choose>
@@ -43,7 +43,7 @@
                 </c:if>
             </td>
             <td>
-                ${creationTime}
+                    ${creationTime}
             </td>
         </tr>
     </c:forEach>
