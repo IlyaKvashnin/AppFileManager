@@ -36,5 +36,6 @@ public class DownloadServlet extends HttpServlet {
         ServletContext ctx = getServletContext();
 
         downloadFile.download(resp, ctx, currFile);
+        return;
     }
 }
