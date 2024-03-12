@@ -9,6 +9,9 @@
 </head>
 <body>
 <p>${currentTime}</p>
+<form method="post" action="/files">
+    <input type="submit" name="submit" value="Logout">
+</form>
 <h2>${currentPath}</h2>
 <hr>
 <c:if test="${pathToUp != null}">
@@ -26,7 +29,7 @@
             <td>
                 <c:choose>
                     <c:when test="${file.isFile()}">
-                        <form style="margin-block-end: 0;" method="post" action="/files?path=${file.getAbsolutePath()}">
+                        <form style="margin-block-end: 0;" method="post" action="/download?path=${file.getAbsolutePath()}">
                             <img class="icon" src="/img/file.png" alt="">
                             <input class="file-path" type="submit" value="${file.getAbsolutePath()}"/>
                         </form>

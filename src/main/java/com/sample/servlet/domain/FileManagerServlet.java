@@ -1,5 +1,7 @@
 package com.sample.servlet.domain;
 
+import com.sample.servlet.infrastructure.models.UserProfile;
+import com.sample.servlet.infrastructure.services.AccountsService;
 import com.sample.servlet.infrastructure.use_cases.DownloadFile;
 import com.sample.servlet.infrastructure.use_cases.GetCurrentTime;
 
@@ -21,26 +23,37 @@ import java.util.Objects;
 
 @WebServlet("/files")
 public class FileManagerServlet extends HttpServlet {
-    final String REQUEST_PARAMETER = "path";
     final String FILE_ATTRIBUTE = "creationTime";
     final String DATE_PATTERN = "MM/dd/yyyy HH:mm:ss";
     private final GetCurrentTime getCurrentTime;
-    private final DownloadFile downloadFile;
+    final String REQUEST_PARAMETER = "path";
 
     public FileManagerServlet() {
         super();
         this.getCurrentTime = new GetCurrentTime();
-        this.downloadFile = new DownloadFile();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        String login = (String)req.getSession().getAttribute("login");
+        String pass = (String)req.getSession().getAttribute("pass");
+
+        if (AccountsService.getUserByLogin(login)==null || !AccountsService.getUserByLogin(login).getPass().equals(pass)) {
+            resp.sendRedirect("/login");
+            return;
+        }
+
+        String currUserAbsolute = "/Users/ilya/fileManager/" + login;
+
+        Path currUserAbsolutePath = Paths.get(currUserAbsolute);
         Path currRelativePath = Objects.isNull(req.getParameter(REQUEST_PARAMETER))
-                ? Paths.get("/")
+                ? currUserAbsolutePath
                 : Paths.get(req.getParameter(REQUEST_PARAMETER));
 
-        String currAbsolutePath = currRelativePath.toAbsolutePath().toString();
+        String currAbsolutePath = !currRelativePath.startsWith(currUserAbsolutePath)
+                ? currUserAbsolutePath.toAbsolutePath().toString()
+                : currRelativePath.toAbsolutePath().toString();
 
         File currDirectory = new File(currAbsolutePath);
         File[] listOfFiles = currDirectory.listFiles();
@@ -68,16 +81,9 @@ public class FileManagerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Path currRelativePath = Objects.isNull(req.getParameter(REQUEST_PARAMETER))
-                ? Paths.get("/")
-                : Paths.get(req.getParameter(REQUEST_PARAMETER));
+        req.getSession().removeAttribute("login");
+        req.getSession().removeAttribute("pass");
 
-        String currAbsolutePath = currRelativePath.toAbsolutePath().toString();
-
-        File currFile = new File(currAbsolutePath);
-
-        ServletContext ctx = getServletContext();
-
-        downloadFile.download(resp, ctx, currFile);
+        resp.sendRedirect("/");
     }
 }
