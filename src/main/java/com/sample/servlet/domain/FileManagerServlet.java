@@ -39,6 +39,11 @@ public class FileManagerServlet extends HttpServlet {
         String login = (String)req.getSession().getAttribute("login");
         String pass = (String)req.getSession().getAttribute("pass");
 
+        if (login == null || pass == null) {
+            resp.sendRedirect("/login");
+            return;
+        }
+
         if (AccountsService.getUserByLogin(login)==null || !AccountsService.getUserByLogin(login).getPass().equals(pass)) {
             resp.sendRedirect("/login");
             return;
