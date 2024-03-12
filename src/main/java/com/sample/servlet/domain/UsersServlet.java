@@ -36,6 +36,7 @@ public class UsersServlet extends HttpServlet {
 
             req.getSession().setAttribute("login",login);
             req.getSession().setAttribute("pass",pass);
+            req.getSession().setAttribute("email",email);
 
             // Создание новой папки для пользователя
             File folder = new File("/Users/ilya/fileManager/" + login);

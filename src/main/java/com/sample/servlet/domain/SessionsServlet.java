@@ -15,6 +15,21 @@ public class SessionsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        String login = (String)req.getSession().getAttribute("login");
+        String pass = (String)req.getSession().getAttribute("pass");
+        String email = (String)req.getSession().getAttribute("email");
+
+        UserProfile profile = new UserProfile(login,pass,email);
+
+        if (AccountsService.getUserByLogin(login)==null) {
+            AccountsService.addNewUser(profile);
+        }
+
+        if (login != null && pass != null) {
+            resp.sendRedirect("/files?path=/Users/ilya/fileManager/" + login);
+            return;
+        }
+
         req.getRequestDispatcher("login.jsp").forward(req, resp);
     }
 
@@ -40,7 +55,6 @@ public class SessionsServlet extends HttpServlet {
         req.getSession().setAttribute("login",login);
         req.getSession().setAttribute("pass",pass);
 
-        //String currentURL = req.getRequestURL().toString();
         resp.sendRedirect("/files");
     }
 }
