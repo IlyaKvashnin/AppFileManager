@@ -1,7 +1,5 @@
 package com.sample.servlet.helpers;
 
-import com.sample.servlet.infrastructure.models.UserProfile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 

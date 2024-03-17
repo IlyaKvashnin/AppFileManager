@@ -10,7 +10,7 @@
 <body>
 <p>${currentTime}</p>
 <form method="post" action="/files">
-    <input type="submit" name="submit" value="Logout">
+    <input class="log" type="submit" name="submit" value="Logout">
 </form>
 <h2>${currentPath}</h2>
 <hr>

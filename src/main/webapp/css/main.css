@@ -11,3 +11,14 @@
     width: 18px;
     height: 18px;
 }
+
+.log {
+    float: right;
+    background-color: rgb(104, 85, 224);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+}

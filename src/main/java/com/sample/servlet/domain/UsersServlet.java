@@ -1,14 +1,15 @@
 package com.sample.servlet.domain;
 
 import com.sample.servlet.helpers.HtmlHelper;
-import com.sample.servlet.infrastructure.models.UserProfile;
-import com.sample.servlet.infrastructure.services.AccountsService;
+import com.sample.servlet.infrastructure.models.User;
+import com.sample.servlet.infrastructure.services.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 
@@ -31,14 +32,13 @@ public class UsersServlet extends HttpServlet {
             return;
         }
 
-        UserProfile profile = new UserProfile(login,pass,email);
-        if (AccountsService.getUserByLogin(login)==null) {
-            AccountsService.addNewUser(profile);
+        UserService accountsService = new UserService();
+        try {
+            accountsService.addUser(login, pass, email);
 
-            req.getSession().setAttribute("login",login);
-            req.getSession().setAttribute("pass",pass);
-            req.getSession().setAttribute("email",email);
-
+            req.getSession().setAttribute("login", login);
+            req.getSession().setAttribute("pass", pass);
+            req.getSession().setAttribute("email", email);
 
             File folder = new File("/Users/ilya/fileManager/" + login);
             boolean isCreationSuccess = folder.mkdir();
@@ -48,8 +48,9 @@ public class UsersServlet extends HttpServlet {
 
                 return;
             }
+
             resp.sendRedirect("/files?=path/Users/ilya/fileManager/" + login);
-        } else {
+        } catch (IllegalArgumentException e) {
             HtmlHelper.CreateAlert("Пользователь с таким логином уже есть в системе", resp);
         }
     }

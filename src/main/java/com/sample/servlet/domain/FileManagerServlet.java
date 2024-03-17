@@ -1,11 +1,8 @@
 package com.sample.servlet.domain;
 
-import com.sample.servlet.infrastructure.models.UserProfile;
-import com.sample.servlet.infrastructure.services.AccountsService;
-import com.sample.servlet.infrastructure.use_cases.DownloadFile;
+import com.sample.servlet.infrastructure.services.UserService;
 import com.sample.servlet.infrastructure.use_cases.GetCurrentTime;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,13 +36,10 @@ public class FileManagerServlet extends HttpServlet {
         String login = (String)req.getSession().getAttribute("login");
         String pass = (String)req.getSession().getAttribute("pass");
 
-        if (login == null || pass == null) {
+        UserService userService = new UserService();
+        if (!userService.validUser(login, pass)) {
             resp.sendRedirect("/login");
-            return;
-        }
 
-        if (AccountsService.getUserByLogin(login)==null || !AccountsService.getUserByLogin(login).getPass().equals(pass)) {
-            resp.sendRedirect("/login");
             return;
         }
 
@@ -86,9 +80,8 @@ public class FileManagerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        req.getSession().removeAttribute("login");
-        req.getSession().removeAttribute("pass");
-        req.getSession().removeAttribute("email");
+        req.getSession(false).invalidate();
+
 
         resp.sendRedirect("/");
     }

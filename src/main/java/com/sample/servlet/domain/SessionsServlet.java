@@ -1,14 +1,15 @@
 package com.sample.servlet.domain;
 
 import com.sample.servlet.helpers.HtmlHelper;
-import com.sample.servlet.infrastructure.models.UserProfile;
+import com.sample.servlet.infrastructure.models.User;
 
-import com.sample.servlet.infrastructure.services.AccountsService;
+import com.sample.servlet.infrastructure.services.UserService;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/")
@@ -18,14 +19,11 @@ public class SessionsServlet extends HttpServlet {
             throws ServletException, IOException {
         String login = (String)req.getSession().getAttribute("login");
         String pass = (String)req.getSession().getAttribute("pass");
-        String email = (String)req.getSession().getAttribute("email");
 
-        if (login == null || pass == null || email == null) {
+        UserService userService = new UserService();
+        if (!userService.validUser(login, pass)) {
             req.getRequestDispatcher("login.jsp").forward(req, resp);
-        }
-
-        if (AccountsService.getUserByLogin(login)==null) {
-            AccountsService.addNewUser(new UserProfile(login,pass,email));
+            return;
         }
 
         resp.sendRedirect("/files?path=/Users/ilya/fileManager/" + login);
@@ -43,16 +41,15 @@ public class SessionsServlet extends HttpServlet {
             return;
         }
 
-        UserProfile profile = AccountsService.getUserByLogin(login);
-        if (profile == null || !profile.getPass().equals(pass)) {
+        UserService userService = new UserService();
+        if (userService.validUser(login, pass)) {
+            req.getSession().setAttribute("login", login);
+            req.getSession().setAttribute("pass", pass);
+
+            resp.sendRedirect("/files?path=/Users/ilya/fileManager/" + login);
+
+        } else {
             HtmlHelper.CreateAlert("Неправильный логин или пароль", resp);
-
-            return;
         }
-
-        req.getSession().setAttribute("login",login);
-        req.getSession().setAttribute("pass",pass);
-
-        resp.sendRedirect("/files?path=/Users/ilya/fileManager/" + login);
     }
 }
