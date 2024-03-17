@@ -1,5 +1,6 @@
 package com.sample.servlet.domain;
 
+import com.sample.servlet.helpers.HtmlHelper;
 import com.sample.servlet.infrastructure.models.UserProfile;
 
 import com.sample.servlet.infrastructure.services.AccountsService;
@@ -19,18 +20,15 @@ public class SessionsServlet extends HttpServlet {
         String pass = (String)req.getSession().getAttribute("pass");
         String email = (String)req.getSession().getAttribute("email");
 
-        UserProfile profile = new UserProfile(login,pass,email);
+        if (login == null || pass == null || email == null) {
+            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        }
 
         if (AccountsService.getUserByLogin(login)==null) {
-            AccountsService.addNewUser(profile);
+            AccountsService.addNewUser(new UserProfile(login,pass,email));
         }
 
-        if (login != null && pass != null) {
-            resp.sendRedirect("/files?path=/Users/ilya/fileManager/" + login);
-            return;
-        }
-
-        req.getRequestDispatcher("login.jsp").forward(req, resp);
+        resp.sendRedirect("/files?path=/Users/ilya/fileManager/" + login);
     }
 
     @Override
@@ -40,21 +38,21 @@ public class SessionsServlet extends HttpServlet {
         String pass = req.getParameter("pass");
 
         if (login.isEmpty() || pass.isEmpty()) {
-            resp.setContentType("text/html;charset=utf-8");
-            resp.getWriter().println("Отсутсвует логин или пароль");
+            HtmlHelper.CreateAlert("Отсуствует логин или пароль", resp);
+
             return;
         }
 
         UserProfile profile = AccountsService.getUserByLogin(login);
         if (profile == null || !profile.getPass().equals(pass)) {
-            resp.setContentType("text/html;charset=utf-8");
-            resp.getWriter().println("Неправильный логин или пароль");
+            HtmlHelper.CreateAlert("Неправильный логин или пароль", resp);
+
             return;
         }
 
         req.getSession().setAttribute("login",login);
         req.getSession().setAttribute("pass",pass);
 
-        resp.sendRedirect("/files");
+        resp.sendRedirect("/files?path=/Users/ilya/fileManager/" + login);
     }
 }

@@ -1,5 +1,6 @@
 package com.sample.servlet.domain;
 
+import com.sample.servlet.helpers.HtmlHelper;
 import com.sample.servlet.infrastructure.models.UserProfile;
 import com.sample.servlet.infrastructure.services.AccountsService;
 
@@ -25,8 +26,8 @@ public class UsersServlet extends HttpServlet {
         String pass = req.getParameter("pass");
 
         if (email.isEmpty() || login.isEmpty() || pass.isEmpty()) {
-            resp.setContentType("text/html;charset=utf-8");
-            resp.getWriter().println("Отсутсвует email, логин или пароль");
+            HtmlHelper.CreateAlert("Все поля должны быть обязательно заполнены", resp);
+
             return;
         }
 
@@ -38,19 +39,18 @@ public class UsersServlet extends HttpServlet {
             req.getSession().setAttribute("pass",pass);
             req.getSession().setAttribute("email",email);
 
-            // Создание новой папки для пользователя
+
             File folder = new File("/Users/ilya/fileManager/" + login);
             boolean isCreationSuccess = folder.mkdir();
-            //Скорее всего никогда не будет false, но если будет нехватать памяти или что-то ещё, то сработает
+
             if (!isCreationSuccess) {
-                resp.setContentType("text/html;charset=utf-8");
-                resp.getWriter().println("Случилась ошибка при создании папки, попробуйте ещё раз");
+                HtmlHelper.CreateAlert("Случилась ошибка при создании папки, попробуйте ещё раз", resp);
+
                 return;
             }
-            resp.sendRedirect("/files");
+            resp.sendRedirect("/files?=path/Users/ilya/fileManager/" + login);
         } else {
-            resp.setContentType("text/html;charset=utf-8");
-            resp.getWriter().println("Пользователь с таким логином уже есть в системе");
+            HtmlHelper.CreateAlert("Пользователь с таким логином уже есть в системе", resp);
         }
     }
 }

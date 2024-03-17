@@ -88,6 +88,7 @@ public class FileManagerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.getSession().removeAttribute("login");
         req.getSession().removeAttribute("pass");
+        req.getSession().removeAttribute("email");
 
         resp.sendRedirect("/");
     }
