@@ -15,7 +15,7 @@
 <h2>${currentPath}</h2>
 <hr>
 <c:if test="${pathToUp != null}">
-    <img class="icon" src="${pageContext.request.contextPath}/img/up.png" alt="">
+    <img class="icon" src="img/up.png" alt="">
     <a href="/files?path=${pathToUp}">Вверх</a>
 </c:if>
 <table>
@@ -30,12 +30,12 @@
                 <c:choose>
                     <c:when test="${file.isFile()}">
                         <form style="margin-block-end: 0;" method="post" action="/download?path=${file.getAbsolutePath()}">
-                            <img class="icon" src="/img/file.png" alt="">
+                            <img class="icon" src="img/file.png" alt="">
                             <input class="file-path" type="submit" value="${file.getAbsolutePath()}"/>
                         </form>
                     </c:when>
                     <c:otherwise>
-                        <img class="icon" src="/img/folder.png" alt="">
+                        <img class="icon" src="img/folder.png" alt="">
                         <a class="file-path" href="/files?path=${file.getAbsolutePath()}">${file.getAbsolutePath()}</a>
                     </c:otherwise>
                 </c:choose>
